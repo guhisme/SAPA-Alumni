@@ -1,6 +1,10 @@
 # Miscellaneous
 *.class
 *.log
+*.keystore
+*.jks
+*.pem
+*.p12
 *.pyc
 *.swp
 .DS_Store
@@ -11,6 +15,13 @@
 .svn/
 .swiftpm/
 migrate_working_dir/
+.firebase/
+.firebaserc
+firebase-debug.log
+firebase-debug.*.log
+.env
+.env.*
+!.env.example
 
 # IntelliJ related
 *.iml
@@ -28,6 +39,8 @@ migrate_working_dir/
 **/ios/Flutter/.last_build_id
 .dart_tool/
 .flutter-plugins-dependencies
+.flutter-plugins
+.packages
 .pub-cache/
 .pub/
 /build/
@@ -43,6 +56,9 @@ app.*.map.json
 /android/app/debug
 /android/app/profile
 /android/app/release
+/android/local.properties
+/android/key.properties
+/functions/node_modules/
 
 # Widget Preview related
 .widget_preview/

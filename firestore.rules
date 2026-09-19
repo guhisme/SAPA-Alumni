@@ -82,7 +82,10 @@ service cloud.firestore {
         (isBkk() && resource.data.bkkId == request.auth.uid &&
          request.resource.data.alumniId == resource.data.alumniId &&
          request.resource.data.jobId == resource.data.jobId &&
-         request.resource.data.bkkId == resource.data.bkkId);
+         request.resource.data.bkkId == resource.data.bkkId &&
+         request.resource.data.status in ['menunggu', 'diproses', 'diterima', 'ditolak'] &&
+         request.resource.data.diff(resource.data).affectedKeys()
+           .hasOnly(['status', 'note', 'updatedAt']));
     }
 
     // ---------- informasi (dikelola admin) ----------
