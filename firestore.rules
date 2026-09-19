@@ -1,0 +1,130 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function myRole() {
+      return get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role;
+    }
+
+    function isAdmin()  { return isSignedIn() && myRole() == 'admin'; }
+    function isBkk()    { return isSignedIn() && myRole() == 'bkk'; }
+    function isAlumni() { return isSignedIn() && myRole() == 'alumni'; }
+
+    // ---------- users ----------
+    match /users/{uid} {
+      allow read: if isAdmin() || request.auth.uid == uid ||
+        (isBkk() && resource.data.role == 'alumni');
+      // Role hanya boleh ditentukan saat pendaftaran mandiri (alumni) atau oleh admin.
+      allow create: if isSignedIn() && request.auth.uid == uid
+                    && request.resource.data.role == 'alumni';
+      allow update: if isSignedIn() &&
+                    ((request.auth.uid == uid &&
+                      request.resource.data.role == resource.data.role) || isAdmin());
+      allow delete: if isAdmin();
+    }
+
+    // ---------- alumni_profiles ----------
+    match /alumni_profiles/{uid} {
+      allow read: if isSignedIn();
+      allow write: if isSignedIn() && (request.auth.uid == uid || isAdmin());
+    }
+
+    // ---------- bkk_profiles ----------
+    match /bkk_profiles/{uid} {
+      allow read: if isAdmin() || request.auth.uid == uid;
+      // BKK membuat profil awal tanpa hak mengatur status verifikasi.
+      allow create: if isAdmin() ||
+        (isBkk() && request.auth.uid == uid &&
+         request.resource.data.verified == false);
+      // Field 'verified' hanya boleh diubah admin.
+      allow update: if isAdmin() ||
+        (isBkk() && request.auth.uid == uid &&
+         request.resource.data.verified == resource.data.verified);
+      allow delete: if isAdmin();
+    }
+
+    // ---------- jobs ----------
+    match /jobs/{jobId} {
+      allow read: if isSignedIn();
+      allow create: if (isBkk() && request.resource.data.bkkId == request.auth.uid) ||
+        isAdmin();
+      allow update: if isAdmin() ||
+        (isBkk() && resource.data.bkkId == request.auth.uid &&
+         request.resource.data.bkkId == resource.data.bkkId);
+      allow delete: if isAdmin() ||
+        (isBkk() && resource.data.bkkId == request.auth.uid);
+    }
+
+    // ---------- applications ----------
+    match /applications/{appId} {
+      allow read: if isSignedIn() && (
+        resource.data.alumniId == request.auth.uid ||
+        (isBkk() && resource.data.bkkId == request.auth.uid) ||
+        isAdmin()
+      );
+      // Alumni hanya boleh melamar atas namanya sendiri, status awal 'menunggu'.
+      allow create: if isAlumni() &&
+        request.resource.data.alumniId == request.auth.uid &&
+        request.resource.data.status == 'menunggu' &&
+        get(/databases/$(database)/documents/jobs/$(request.resource.data.jobId)).data.status == 'open' &&
+        get(/databases/$(database)/documents/jobs/$(request.resource.data.jobId)).data.bkkId == request.resource.data.bkkId;
+      // Alumni boleh membatalkan lamaran yang masih menunggu.
+      allow delete: if (isAlumni() && resource.data.alumniId == request.auth.uid &&
+                        resource.data.status == 'menunggu') ||
+        (isBkk() && resource.data.bkkId == request.auth.uid) || isAdmin();
+      // Perubahan status hanya oleh BKK pemilik lowongan atau admin.
+      allow update: if isAdmin() ||
+        (isBkk() && resource.data.bkkId == request.auth.uid &&
+         request.resource.data.alumniId == resource.data.alumniId &&
+         request.resource.data.jobId == resource.data.jobId &&
+         request.resource.data.bkkId == resource.data.bkkId);
+    }
+
+    // ---------- informasi (dikelola admin) ----------
+    match /scholarships/{id} {
+      allow read: if isSignedIn();
+      allow write: if isAdmin();
+    }
+    match /trainings/{id} {
+      allow read: if isSignedIn();
+      allow write: if isAdmin();
+    }
+    match /announcements/{id} {
+      allow read: if isSignedIn();
+      allow write: if isAdmin();
+    }
+    match /banners/{id} {
+      allow read: if isSignedIn();
+      allow write: if isAdmin();
+    }
+
+    // ---------- bookmarks ----------
+    match /bookmarks/{id} {
+      allow read, delete: if isSignedIn() && resource.data.userId == request.auth.uid;
+      allow create: if isSignedIn() && request.resource.data.userId == request.auth.uid;
+      allow update: if isSignedIn() &&
+        resource.data.userId == request.auth.uid &&
+        request.resource.data.userId == request.auth.uid;
+    }
+
+    // ---------- notifications ----------
+    match /notifications/{id} {
+      allow read: if isSignedIn() && resource.data.userId == request.auth.uid;
+      // Dibuat oleh pemiliknya sendiri, oleh BKK/admin saat mengubah status
+      // lamaran, dan oleh Cloud Functions (admin SDK, tidak terkena rules).
+      allow create: if isSignedIn() && (
+        request.resource.data.userId == request.auth.uid ||
+        isAdmin() ||
+        (isBkk() &&
+         get(/databases/$(database)/documents/applications/$(request.resource.data.referenceId)).data.bkkId == request.auth.uid &&
+         get(/databases/$(database)/documents/applications/$(request.resource.data.referenceId)).data.alumniId == request.resource.data.userId)
+      );
+      allow update, delete: if isSignedIn() && resource.data.userId == request.auth.uid;
+    }
+  }
+}

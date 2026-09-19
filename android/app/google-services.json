@@ -1,0 +1,91 @@
+{
+  "project_info": {
+    "project_number": "725664611084",
+    "firebase_url": "https://sapaalumni-559d6-default-rtdb.firebaseio.com",
+    "project_id": "sapaalumni-559d6",
+    "storage_bucket": "sapaalumni-559d6.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:725664611084:android:7194b29e26146c61776729",
+        "android_client_info": {
+          "package_name": "com.example.sapaalumni"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "725664611084-0ulajjnit5ttqir6cctj3f7lkpoacdsv.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCOf2Y0J7m2PUm0IYDhT2W5BtBpC6g9EJk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "725664611084-0ulajjnit5ttqir6cctj3f7lkpoacdsv.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "725664611084-qqm54tml1q4l65ocndo8hhfs7ka6cbd9.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.sapaalumni"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:725664611084:android:f747e9ee19a862c7776729",
+        "android_client_info": {
+          "package_name": "com.sapa.app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "725664611084-a4pnq0m01dmdqqjogo4oude8lsi8ahmi.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.sapa.app",
+            "certificate_hash": "272e47efca4523a65538ffc517351ee6ecacde76"
+          }
+        },
+        {
+          "client_id": "725664611084-0ulajjnit5ttqir6cctj3f7lkpoacdsv.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCOf2Y0J7m2PUm0IYDhT2W5BtBpC6g9EJk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "725664611084-0ulajjnit5ttqir6cctj3f7lkpoacdsv.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "725664611084-qqm54tml1q4l65ocndo8hhfs7ka6cbd9.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.sapaalumni"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
