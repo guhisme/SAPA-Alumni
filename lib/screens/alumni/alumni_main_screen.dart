@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 
 import '../../utils/app_colors.dart';
 import 'alumni_applications_screen.dart';
-import 'alumni_bookmark_screen.dart';
 import 'alumni_home_screen.dart';
 import 'alumni_info_screen.dart';
 import 'alumni_jobs_screen.dart';
+import 'alumni_marketplace_screen.dart';
 import 'alumni_profile_screen.dart';
 
 /// Kerangka utama alumni dengan bottom navigation 6 menu.
@@ -24,12 +24,12 @@ class AlumniMainScreenState extends State<AlumniMainScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final pages = const [
+    const pages = [
       AlumniHomeScreen(),
       AlumniJobsScreen(),
       AlumniInfoScreen(),
       AlumniApplicationsScreen(),
-      AlumniBookmarkScreen(),
+      AlumniMarketplaceScreen(),
       AlumniProfileScreen(),
     ];
 
@@ -64,9 +64,9 @@ class AlumniMainScreenState extends State<AlumniMainScreen> {
               label: 'Lamaran',
             ),
             BottomNavigationBarItem(
-              icon: Icon(Icons.bookmark_outline),
-              activeIcon: Icon(Icons.bookmark_rounded),
-              label: 'Bookmark',
+              icon: Icon(Icons.storefront_outlined),
+              activeIcon: Icon(Icons.storefront_rounded),
+              label: 'Marketplace',
             ),
             BottomNavigationBarItem(
               icon: Icon(Icons.person_outline),

@@ -1,13 +1,10 @@
 import 'package:flutter/material.dart';
 
 import '../../models/announcement_model.dart';
-import '../../services/auth_service.dart';
 import '../../services/info_service.dart';
 import '../../utils/app_colors.dart';
-import '../../utils/constants.dart';
 import '../../utils/formatters.dart';
 import '../../widgets/loading_view.dart';
-import 'bookmark_button.dart';
 
 class AlumniAnnouncementDetailScreen extends StatelessWidget {
   final String id;
@@ -15,21 +12,9 @@ class AlumniAnnouncementDetailScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final uid = AuthService.instance.uid;
-
     return Scaffold(
       backgroundColor: AppColors.background,
-      appBar: AppBar(
-        title: const Text('Pengumuman'),
-        actions: [
-          if (uid != null)
-            BookmarkButton(
-              userId: uid,
-              contentType: ContentType.announcement,
-              contentId: id,
-            ),
-        ],
-      ),
+      appBar: AppBar(title: const Text('Pengumuman')),
       body: StreamBuilder<AnnouncementModel?>(
         stream: InfoService.instance.watchAnnouncement(id),
         builder: (context, snap) {

@@ -2,15 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../models/scholarship_model.dart';
-import '../../services/auth_service.dart';
 import '../../services/info_service.dart';
 import '../../utils/app_colors.dart';
-import '../../utils/constants.dart';
 import '../../utils/formatters.dart';
 import '../../widgets/app_snackbar.dart';
 import '../../widgets/info_tile.dart';
 import '../../widgets/loading_view.dart';
-import 'bookmark_button.dart';
 
 class AlumniScholarshipDetailScreen extends StatelessWidget {
   final String id;
@@ -30,21 +27,9 @@ class AlumniScholarshipDetailScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final uid = AuthService.instance.uid;
-
     return Scaffold(
       backgroundColor: AppColors.background,
-      appBar: AppBar(
-        title: const Text('Detail Beasiswa'),
-        actions: [
-          if (uid != null)
-            BookmarkButton(
-              userId: uid,
-              contentType: ContentType.scholarship,
-              contentId: id,
-            ),
-        ],
-      ),
+      appBar: AppBar(title: const Text('Detail Beasiswa')),
       body: StreamBuilder<ScholarshipModel?>(
         stream: InfoService.instance.watchScholarship(id),
         builder: (context, snap) {

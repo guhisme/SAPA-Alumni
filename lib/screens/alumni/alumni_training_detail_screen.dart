@@ -2,15 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../models/training_model.dart';
-import '../../services/auth_service.dart';
 import '../../services/info_service.dart';
 import '../../utils/app_colors.dart';
-import '../../utils/constants.dart';
 import '../../utils/formatters.dart';
 import '../../widgets/app_snackbar.dart';
 import '../../widgets/info_tile.dart';
 import '../../widgets/loading_view.dart';
-import 'bookmark_button.dart';
 
 class AlumniTrainingDetailScreen extends StatelessWidget {
   final String id;
@@ -30,21 +27,9 @@ class AlumniTrainingDetailScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final uid = AuthService.instance.uid;
-
     return Scaffold(
       backgroundColor: AppColors.background,
-      appBar: AppBar(
-        title: const Text('Detail Pelatihan'),
-        actions: [
-          if (uid != null)
-            BookmarkButton(
-              userId: uid,
-              contentType: ContentType.training,
-              contentId: id,
-            ),
-        ],
-      ),
+      appBar: AppBar(title: const Text('Detail Pelatihan')),
       body: StreamBuilder<TrainingModel?>(
         stream: InfoService.instance.watchTraining(id),
         builder: (context, snap) {
@@ -107,8 +92,7 @@ class AlumniTrainingDetailScreen extends StatelessWidget {
                       label: 'Batas daftar',
                       value: Fmt.date(item.deadline),
                     ),
-                    SectionBlock(
-                        title: 'Deskripsi', content: item.description),
+                    SectionBlock(title: 'Deskripsi', content: item.description),
                   ],
                 ),
               ),

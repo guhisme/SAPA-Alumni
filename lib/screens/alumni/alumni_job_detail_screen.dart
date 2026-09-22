@@ -5,7 +5,6 @@ import '../../models/application_model.dart';
 import '../../models/job_model.dart';
 import '../../services/application_service.dart';
 import '../../services/auth_service.dart';
-import '../../services/bookmark_service.dart';
 import '../../services/job_service.dart';
 import '../../utils/app_colors.dart';
 import '../../utils/constants.dart';
@@ -66,7 +65,8 @@ class _AlumniJobDetailScreenState extends State<AlumniJobDetailScreen> {
             'Akses lamaran ditolak. Pastikan role akun Anda adalah alumni dan lowongan memiliki pemilik BKK yang valid.',
           'failed-precondition' =>
             'Data lowongan belum lengkap atau konfigurasi Firestore belum siap.',
-          'unavailable' || 'network-request-failed' =>
+          'unavailable' ||
+          'network-request-failed' =>
             'Koneksi internet diperlukan untuk mengirim lamaran.',
           _ => 'Gagal mengirim lamaran (${e.code}).',
         };
@@ -89,50 +89,6 @@ class _AlumniJobDetailScreenState extends State<AlumniJobDetailScreen> {
       backgroundColor: AppColors.background,
       appBar: AppBar(
         title: const Text('Detail Lowongan'),
-        actions: [
-          if (uid != null)
-            StreamBuilder<bool>(
-              stream: BookmarkService.instance.watchIsBookmarked(
-                userId: uid,
-                contentType: ContentType.job,
-                contentId: widget.jobId,
-              ),
-              builder: (context, snap) {
-                final saved = snap.data ?? false;
-                return IconButton(
-                  tooltip: saved ? 'Hapus dari bookmark' : 'Simpan ke bookmark',
-                  icon: Icon(
-                    saved ? Icons.bookmark_rounded : Icons.bookmark_outline,
-                    color: saved ? AppColors.primary : null,
-                  ),
-                  onPressed: () async {
-                    try {
-                      final nowSaved = await BookmarkService.instance.toggle(
-                        userId: uid,
-                        contentType: ContentType.job,
-                        contentId: widget.jobId,
-                      );
-                      if (context.mounted) {
-                        AppSnackbar.show(
-                          context,
-                          nowSaved
-                              ? 'Lowongan disimpan ke bookmark.'
-                              : 'Lowongan dihapus dari bookmark.',
-                        );
-                      }
-                    } catch (error) {
-                      if (context.mounted) {
-                        AppSnackbar.error(
-                          context,
-                          'Gagal memperbarui bookmark: ${error.toString()}',
-                        );
-                      }
-                    }
-                  },
-                );
-              },
-            ),
-        ],
       ),
       body: StreamBuilder<JobModel?>(
         stream: JobService.instance.watchJob(widget.jobId),
