@@ -14,6 +14,7 @@ class ApplicationModel {
   final String company;
   final String bkkId;
   final String note;
+  final String decisionLetterUrl;
 
   const ApplicationModel({
     required this.id,
@@ -25,6 +26,7 @@ class ApplicationModel {
     this.company = '',
     this.bkkId = '',
     this.note = '',
+    this.decisionLetterUrl = '',
   });
 
   factory ApplicationModel.fromMap(String id, Map<String, dynamic> map) =>
@@ -38,6 +40,7 @@ class ApplicationModel {
         company: map['company'] as String? ?? '',
         bkkId: map['bkkId'] as String? ?? '',
         note: map['note'] as String? ?? '',
+        decisionLetterUrl: map['decisionLetterUrl'] as String? ?? '',
       );
 
   factory ApplicationModel.fromDoc(
@@ -54,5 +57,7 @@ class ApplicationModel {
         'company': company,
         'bkkId': bkkId,
         'note': note,
+        if (decisionLetterUrl.isNotEmpty)
+          'decisionLetterUrl': decisionLetterUrl,
       };
 }

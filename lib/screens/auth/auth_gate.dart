@@ -50,7 +50,8 @@ class _AuthGateState extends State<AuthGate> {
           stream: _streamForUser(user.uid),
           builder: (context, userSnap) {
             if (userSnap.connectionState == ConnectionState.waiting) {
-              return const Scaffold(body: LoadingView(message: 'Memuat akun...'));
+              return const Scaffold(
+                  body: LoadingView(message: 'Memuat akun...'));
             }
             if (userSnap.hasError) {
               return Scaffold(
@@ -64,11 +65,24 @@ class _AuthGateState extends State<AuthGate> {
 
             final profile = userSnap.data;
             if (profile == null) {
-              return const Scaffold(
-                body: ErrorView(
-                  message:
-                      'Data akun tidak ditemukan di database. Hubungi admin sekolah.',
-                ),
+              return FutureBuilder<void>(
+                future: AuthService.instance.ensureUserDocument(user),
+                builder: (context, repairSnap) {
+                  if (repairSnap.connectionState != ConnectionState.done) {
+                    return const Scaffold(
+                        body: LoadingView(message: 'Menyiapkan akun...'));
+                  }
+                  if (repairSnap.hasError) {
+                    return const Scaffold(
+                      body: ErrorView(
+                        message:
+                            'Akun berhasil login, tetapi data akun belum dapat dimuat.',
+                      ),
+                    );
+                  }
+                  return const Scaffold(
+                      body: LoadingView(message: 'Memuat akun...'));
+                },
               );
             }
 

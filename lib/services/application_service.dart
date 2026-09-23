@@ -5,6 +5,7 @@ import '../models/job_model.dart';
 import '../utils/constants.dart';
 import '../utils/formatters.dart';
 import 'notification_service.dart';
+import 'decision_letter_service.dart';
 
 /// Kesalahan yang bisa ditampilkan langsung ke pengguna.
 class ApplyException implements Exception {
@@ -70,8 +71,8 @@ class ApplicationService {
   /// True bila alumni sudah diterima di salah satu perusahaan.
   Future<bool> hasAccepted(String alumniId) async {
     final snap = await _col.where('alumniId', isEqualTo: alumniId).get();
-    return snap.docs.any((doc) =>
-      (doc.data()['status'] as String?) == AppStatus.diterima);
+    return snap.docs
+        .any((doc) => (doc.data()['status'] as String?) == AppStatus.diterima);
   }
 
   Stream<bool> watchHasAccepted(String alumniId) => Stream.fromFuture(
@@ -98,7 +99,8 @@ class ApplicationService {
     final jobSnapshot = await _db.collection(Col.jobs).doc(job.id).get();
     final jobData = jobSnapshot.data();
     if (!jobSnapshot.exists || jobData == null) {
-      throw ApplyException('Lowongan tidak ditemukan di server. Muat ulang halaman.');
+      throw ApplyException(
+          'Lowongan tidak ditemukan di server. Muat ulang halaman.');
     }
     if (jobData['status'] != AppStatus.jobOpen) {
       throw ApplyException('Lowongan ini sudah ditutup.');
@@ -218,6 +220,27 @@ class ApplicationService {
       'note': note.trim(),
       'updatedAt': FieldValue.serverTimestamp(),
     }, SetOptions(merge: true));
+
+    if (status == AppStatus.diterima || status == AppStatus.ditolak) {
+      try {
+        await DecisionLetterService.instance.createAndUpload(
+          application: ApplicationModel(
+            id: application.id,
+            jobId: application.jobId,
+            alumniId: application.alumniId,
+            appliedAt: application.appliedAt,
+            status: status,
+            jobTitle: application.jobTitle,
+            company: application.company,
+            bkkId: application.bkkId,
+            note: note.trim(),
+          ),
+          status: status,
+        );
+      } on FirebaseException {
+        // Status tetap tersimpan bila Storage belum dikonfigurasi.
+      }
+    }
 
     await NotificationService.instance.create(
       userId: application.alumniId,

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../utils/app_colors.dart';
@@ -49,17 +50,12 @@ class _SplashScreenState extends State<SplashScreen> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Container(
-              height: 96,
-              width: 96,
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(28),
-              ),
-              child: const Icon(
-                Icons.school_rounded,
-                size: 50,
-                color: AppColors.primary,
+            ClipRRect(
+              borderRadius: BorderRadius.circular(28),
+              child: SvgPicture.asset(
+                'assets/images/logo/sapa_alumni_logo.svg',
+                height: 96,
+                width: 96,
               ),
             ),
             const SizedBox(height: 22),

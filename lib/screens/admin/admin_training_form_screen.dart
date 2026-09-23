@@ -159,7 +159,7 @@ class _AdminTrainingFormScreenState extends State<AdminTrainingFormScreen> {
                 ),
                 const SizedBox(height: 14),
                 DropdownButtonFormField<String>(
-                  value: _mode,
+                  initialValue: _mode,
                   decoration: const InputDecoration(
                     labelText: 'Metode',
                     prefixIcon: Icon(Icons.laptop_outlined),

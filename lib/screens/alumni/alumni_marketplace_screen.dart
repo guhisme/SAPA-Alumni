@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 
 import '../../models/marketplace_product.dart';
+import '../../services/marketplace_service.dart';
 import '../../utils/app_colors.dart';
 import 'alumni_marketplace_detail_screen.dart';
 
@@ -31,30 +32,18 @@ class _AlumniMarketplaceScreenState extends State<AlumniMarketplaceScreen> {
     'TJA',
   ];
 
-  List<MarketplaceProduct> get _promoProducts => [
-        MarketplaceProduct.products[0],
-        MarketplaceProduct.products[3],
+  List<MarketplaceProduct> _promoProducts(List<MarketplaceProduct> products) =>
+      [
+        products[0],
+        products.length > 3 ? products[3] : products.last,
       ];
-
-  List<MarketplaceProduct> get _filteredProducts {
-    final query = _searchController.text.trim().toLowerCase();
-    return MarketplaceProduct.products.where((product) {
-      final matchesCategory = _selectedCategory == 'Semua' ||
-          product.categoryCode == _selectedCategory;
-      final matchesSearch = query.isEmpty ||
-          product.name.toLowerCase().contains(query) ||
-          product.department.toLowerCase().contains(query) ||
-          product.categoryCode.toLowerCase().contains(query);
-      return matchesCategory && matchesSearch;
-    }).toList();
-  }
 
   @override
   void initState() {
     super.initState();
     _promoAutoSlideTimer = Timer.periodic(const Duration(seconds: 5), (_) {
       if (!_promoCarouselController.hasClients) return;
-      final next = (_currentPromoIndex + 1) % _promoProducts.length;
+      final next = (_currentPromoIndex + 1) % 2;
       _promoCarouselController.animateToPage(
         next,
         duration: const Duration(milliseconds: 450),
@@ -118,24 +107,34 @@ class _AlumniMarketplaceScreenState extends State<AlumniMarketplaceScreen> {
             ),
           ),
           const SizedBox(height: 16),
-          SizedBox(
-            height: 176,
-            child: PageView.builder(
-              controller: _promoCarouselController,
-              itemCount: _promoProducts.length,
-              onPageChanged: (index) =>
-                  setState(() => _currentPromoIndex = index),
-              itemBuilder: (_, index) => _PromoBanner(
-                product: _promoProducts[index],
-                onTap: () => _open(context, _promoProducts[index]),
-              ),
-            ),
+          StreamBuilder<List<MarketplaceProduct>>(
+            stream: MarketplaceService.instance.watchProducts(),
+            builder: (context, snap) {
+              final products = snap.data ?? MarketplaceProduct.products;
+              final promos = _promoProducts(products);
+              return SizedBox(
+                height: 176,
+                child: PageView.builder(
+                  controller: _promoCarouselController,
+                  itemCount: promos.length,
+                  onPageChanged: (index) =>
+                      setState(() => _currentPromoIndex = index),
+                  itemBuilder: (_, index) => Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 5),
+                    child: _PromoBanner(
+                      product: promos[index],
+                      onTap: () => _open(context, promos[index]),
+                    ),
+                  ),
+                ),
+              );
+            },
           ),
           const SizedBox(height: 8),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: List.generate(
-              _promoProducts.length,
+              2,
               (index) => AnimatedContainer(
                 duration: const Duration(milliseconds: 200),
                 margin: const EdgeInsets.symmetric(horizontal: 3),
@@ -164,32 +163,49 @@ class _AlumniMarketplaceScreenState extends State<AlumniMarketplaceScreen> {
             style: TextStyle(color: AppColors.textGrey),
           ),
           const SizedBox(height: 14),
-          GridView.builder(
-            shrinkWrap: true,
-            physics: const NeverScrollableScrollPhysics(),
-            itemCount: _filteredProducts.length,
-            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 2,
-              crossAxisSpacing: 12,
-              mainAxisSpacing: 12,
-              childAspectRatio: .72,
-            ),
-            itemBuilder: (_, index) {
-              final product = _filteredProducts[index];
-              return _ProductCard(
-                  product: product, onTap: () => _open(context, product));
+          StreamBuilder<List<MarketplaceProduct>>(
+            stream: MarketplaceService.instance.watchProducts(),
+            builder: (context, snap) {
+              final products = snap.data ?? MarketplaceProduct.products;
+              final query = _searchController.text.trim().toLowerCase();
+              final filtered = products.where((product) {
+                final matchesCategory = _selectedCategory == 'Semua' ||
+                    product.categoryCode == _selectedCategory;
+                final matchesSearch = query.isEmpty ||
+                    product.name.toLowerCase().contains(query) ||
+                    product.department.toLowerCase().contains(query) ||
+                    product.categoryCode.toLowerCase().contains(query);
+                return matchesCategory && matchesSearch;
+              }).toList();
+              if (filtered.isEmpty) {
+                return const Padding(
+                  padding: EdgeInsets.symmetric(vertical: 40),
+                  child: Center(
+                    child: Text(
+                      'Produk tidak ditemukan.',
+                      style: TextStyle(color: AppColors.textGrey),
+                    ),
+                  ),
+                );
+              }
+              return GridView.builder(
+                shrinkWrap: true,
+                physics: const NeverScrollableScrollPhysics(),
+                itemCount: filtered.length,
+                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 2,
+                  crossAxisSpacing: 12,
+                  mainAxisSpacing: 12,
+                  childAspectRatio: .72,
+                ),
+                itemBuilder: (_, index) {
+                  final product = filtered[index];
+                  return _ProductCard(
+                      product: product, onTap: () => _open(context, product));
+                },
+              );
             },
           ),
-          if (_filteredProducts.isEmpty)
-            const Padding(
-              padding: EdgeInsets.symmetric(vertical: 40),
-              child: Center(
-                child: Text(
-                  'Produk tidak ditemukan.',
-                  style: TextStyle(color: AppColors.textGrey),
-                ),
-              ),
-            ),
         ],
       ),
     );
@@ -214,24 +230,6 @@ class _PromoBanner extends StatelessWidget {
             _MarketplaceImage(
               assetPath: product.promoBannerAsset,
               placeholderColor: _colorFromHex(product.placeholderColorHex),
-            ),
-            Container(
-              padding: const EdgeInsets.all(18),
-              alignment: Alignment.bottomLeft,
-              decoration: const BoxDecoration(
-                gradient: LinearGradient(
-                  begin: Alignment.topCenter,
-                  end: Alignment.bottomCenter,
-                  colors: [Colors.transparent, Color(0xCC000000)],
-                ),
-              ),
-              child: Text(
-                'Promo ${product.name}',
-                style: const TextStyle(
-                    color: Colors.white,
-                    fontSize: 20,
-                    fontWeight: FontWeight.w800),
-              ),
             ),
           ],
         ),

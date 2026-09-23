@@ -5,10 +5,8 @@ import '../utils/app_colors.dart';
 import 'auth/auth_gate.dart';
 
 class _OnboardPage {
-  final IconData icon;
-  final String title;
-  final String description;
-  const _OnboardPage(this.icon, this.title, this.description);
+  final String assetPath;
+  const _OnboardPage(this.assetPath);
 }
 
 /// Hanya tampil pada pembukaan pertama aplikasi.
@@ -24,21 +22,9 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
   int _index = 0;
 
   static const _pages = [
-    _OnboardPage(
-      Icons.work_outline_rounded,
-      'Lowongan kerja dari BKK sekolah',
-      'Lihat lowongan terbaru yang dibuka mitra BKK, lengkap dengan syarat dan batas waktunya.',
-    ),
-    _OnboardPage(
-      Icons.assignment_turned_in_outlined,
-      'Lamar dan pantau statusnya',
-      'Kirim lamaran langsung dari aplikasi, lalu ikuti perkembangannya sampai diterima.',
-    ),
-    _OnboardPage(
-      Icons.campaign_outlined,
-      'Info beasiswa, pelatihan, pengumuman',
-      'Semua informasi penting untuk alumni ada di satu tempat dan bisa disimpan ke bookmark.',
-    ),
+    _OnboardPage('assets/images/onboarding/onboarding_1.png'),
+    _OnboardPage('assets/images/onboarding/onboarding_2.png'),
+    _OnboardPage('assets/images/onboarding/onboarding_3.png'),
   ];
 
   @override
@@ -88,35 +74,12 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Container(
-                          height: 150,
-                          width: 150,
-                          decoration: const BoxDecoration(
-                            color: AppColors.primarySoft,
-                            shape: BoxShape.circle,
-                          ),
-                          child: Icon(page.icon,
-                              size: 68, color: AppColors.primary),
-                        ),
-                        const SizedBox(height: 36),
-                        Text(
-                          page.title,
-                          textAlign: TextAlign.center,
-                          style: const TextStyle(
-                            fontSize: 20,
-                            fontWeight: FontWeight.w800,
-                            color: AppColors.textDark,
-                            height: 1.3,
-                          ),
-                        ),
-                        const SizedBox(height: 12),
-                        Text(
-                          page.description,
-                          textAlign: TextAlign.center,
-                          style: const TextStyle(
-                            fontSize: 14,
-                            color: AppColors.textGrey,
-                            height: 1.6,
+                        Expanded(
+                          child: Image.asset(
+                            page.assetPath,
+                            fit: BoxFit.contain,
+                            errorBuilder: (_, __, ___) =>
+                                const SizedBox.shrink(),
                           ),
                         ),
                       ],

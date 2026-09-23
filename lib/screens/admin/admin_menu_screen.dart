@@ -9,6 +9,7 @@ import '../../utils/app_colors.dart';
 import '../../utils/formatters.dart';
 import 'admin_bkk_verification_screen.dart';
 import 'admin_whatsapp_screen.dart';
+import 'admin_marketplace_screen.dart';
 import '../auth/login_screen.dart';
 
 /// Menu tambahan admin: verifikasi BKK, WhatsApp massal, keluar.
@@ -187,6 +188,23 @@ class AdminMenuScreen extends StatelessWidget {
                       context,
                       MaterialPageRoute(
                         builder: (_) => const AdminWhatsappScreen(),
+                      ),
+                    ),
+                  ),
+                  const Divider(height: 1, indent: 16, endIndent: 16),
+                  ListTile(
+                    leading: const Icon(Icons.storefront_outlined,
+                        color: AppColors.primary),
+                    title: const Text('Kelola Marketplace',
+                        style: TextStyle(fontSize: 14)),
+                    subtitle: const Text(
+                        'Atur nama dan harga produk marketplace',
+                        style: TextStyle(fontSize: 12)),
+                    trailing: const Icon(Icons.chevron_right),
+                    onTap: () => Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (_) => const AdminMarketplaceScreen(),
                       ),
                     ),
                   ),

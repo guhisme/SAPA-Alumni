@@ -21,8 +21,9 @@ class Validators {
   }
 
   static String? confirmPassword(String? value, String password) {
-    if (value == null || value.isEmpty)
+    if (value == null || value.isEmpty) {
       return 'Konfirmasi password wajib diisi';
+    }
     if (value != password) return 'Password tidak sama';
     return null;
   }
@@ -33,8 +34,8 @@ class Validators {
       return 'Nomor WhatsApp wajib diisi';
     }
     final digits = value.replaceAll(RegExp(r'[^0-9]'), '');
-    if (digits.length < 10 || digits.length > 15) {
-      return 'Nomor WhatsApp harus 10-15 digit';
+    if (digits.length < 11 || digits.length > 13) {
+      return 'Nomor WhatsApp harus 11-13 digit';
     }
     if (!(digits.startsWith('08') || digits.startsWith('628'))) {
       return 'Gunakan format 08xxx atau 628xxx';

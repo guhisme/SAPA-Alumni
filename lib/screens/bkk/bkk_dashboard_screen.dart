@@ -75,14 +75,15 @@ class BkkDashboardScreen extends StatelessWidget {
                               color: AppColors.accentSoft,
                               borderRadius: BorderRadius.circular(14),
                               border: Border.all(
-                                  color: AppColors.accent.withValues(alpha: 0.5)),
+                                  color:
+                                      AppColors.accent.withValues(alpha: 0.5)),
                             ),
-                            child: Row(
+                            child: const Row(
                               children: [
-                                const Icon(Icons.pending_outlined,
+                                Icon(Icons.pending_outlined,
                                     color: AppColors.warning, size: 20),
-                                const SizedBox(width: 10),
-                                const Expanded(
+                                SizedBox(width: 10),
+                                Expanded(
                                   child: Text(
                                     'Akun BKK Anda menunggu verifikasi admin. '
                                     'Lengkapi profil BKK agar lebih cepat diverifikasi.',
@@ -268,8 +269,7 @@ class _StatCard extends StatelessWidget {
               const SizedBox(height: 2),
               Text(
                 label,
-                style: const TextStyle(
-                    fontSize: 12, color: AppColors.textGrey),
+                style: const TextStyle(fontSize: 12, color: AppColors.textGrey),
               ),
             ],
           ),

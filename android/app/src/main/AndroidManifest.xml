@@ -2,7 +2,7 @@
     <application
         android:label="sapaalumni"
         android:name="${applicationName}"
-        android:icon="@mipmap/ic_launcher">
+        android:icon="@drawable/sapa_alumni_logo">
         <activity
             android:name=".MainActivity"
             android:exported="true"

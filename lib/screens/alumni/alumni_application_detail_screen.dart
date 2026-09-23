@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../../models/application_model.dart';
 import '../../models/job_model.dart';
@@ -130,6 +131,17 @@ class AlumniApplicationDetailScreen extends StatelessWidget {
               const SizedBox(height: 14),
               _StatusTimeline(status: app.status),
               const SizedBox(height: 18),
+              if (app.decisionLetterUrl.isNotEmpty) ...[
+                OutlinedButton.icon(
+                  onPressed: () => launchUrl(
+                    Uri.parse(app.decisionLetterUrl),
+                    mode: LaunchMode.externalApplication,
+                  ),
+                  icon: const Icon(Icons.picture_as_pdf_outlined),
+                  label: const Text('Buka surat hasil lamaran'),
+                ),
+                const SizedBox(height: 10),
+              ],
               StreamBuilder<JobModel?>(
                 stream: JobService.instance.watchJob(app.jobId),
                 builder: (context, jobSnap) {
@@ -267,9 +279,8 @@ class _StatusTimeline extends StatelessWidget {
                           style: TextStyle(
                             fontSize: 13.5,
                             fontWeight: FontWeight.w600,
-                            color: done
-                                ? AppColors.textDark
-                                : AppColors.textGrey,
+                            color:
+                                done ? AppColors.textDark : AppColors.textGrey,
                           ),
                         ),
                         const SizedBox(height: 2),

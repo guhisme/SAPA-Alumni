@@ -7,6 +7,9 @@ import 'alumni_info_screen.dart';
 import 'alumni_jobs_screen.dart';
 import 'alumni_marketplace_screen.dart';
 import 'alumni_profile_screen.dart';
+import '../shared/settings_screen.dart';
+import '../../services/auth_service.dart';
+import '../../screens/auth/login_screen.dart';
 
 /// Kerangka utama alumni dengan bottom navigation 6 menu.
 class AlumniMainScreen extends StatefulWidget {
@@ -34,6 +37,61 @@ class AlumniMainScreenState extends State<AlumniMainScreen> {
     ];
 
     return Scaffold(
+      drawer: Drawer(
+        child: SafeArea(
+          child: ListView(
+            padding: EdgeInsets.zero,
+            children: [
+              const DrawerHeader(
+                decoration: BoxDecoration(color: AppColors.primary),
+                child: Align(
+                  alignment: Alignment.bottomLeft,
+                  child: Text('SAPA Alumni',
+                      style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 22,
+                          fontWeight: FontWeight.w800)),
+                ),
+              ),
+              ListTile(
+                leading: const Icon(Icons.home_outlined),
+                title: const Text('Beranda'),
+                onTap: () {
+                  Navigator.pop(context);
+                  goToTab(0);
+                },
+              ),
+              ListTile(
+                leading: const Icon(Icons.person_outline),
+                title: const Text('Profil'),
+                onTap: () {
+                  Navigator.pop(context);
+                  goToTab(5);
+                },
+              ),
+              ListTile(
+                leading: const Icon(Icons.settings_outlined),
+                title: const Text('Settings'),
+                onTap: () => Navigator.push(context,
+                    MaterialPageRoute(builder: (_) => const SettingsScreen())),
+              ),
+              ListTile(
+                leading: const Icon(Icons.logout_outlined),
+                title: const Text('Keluar'),
+                onTap: () async {
+                  Navigator.pop(context);
+                  await AuthService.instance.logout();
+                  if (context.mounted) {
+                    Navigator.of(context).pushAndRemoveUntil(
+                        MaterialPageRoute(builder: (_) => const LoginScreen()),
+                        (_) => false);
+                  }
+                },
+              ),
+            ],
+          ),
+        ),
+      ),
       body: pages[_index],
       bottomNavigationBar: Container(
         decoration: const BoxDecoration(

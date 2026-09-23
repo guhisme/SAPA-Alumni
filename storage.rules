@@ -1,0 +1,15 @@
+rules_version = '2';
+
+service firebase.storage {
+  match /b/{bucket}/o {
+    match /decision_letters/{applicationId}.pdf {
+      allow read: if request.auth != null &&
+        (firestore.get(/databases/(default)/documents/applications/$(applicationId)).data.alumniId == request.auth.uid ||
+         firestore.get(/databases/(default)/documents/applications/$(applicationId)).data.bkkId == request.auth.uid ||
+         firestore.get(/databases/(default)/documents/users/$(request.auth.uid)).data.role == 'admin');
+      allow write: if request.auth != null &&
+        firestore.get(/databases/(default)/documents/applications/$(applicationId)).data.bkkId == request.auth.uid &&
+        request.resource.contentType == 'application/pdf';
+    }
+  }
+}

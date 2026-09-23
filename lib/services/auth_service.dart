@@ -55,7 +55,7 @@ class AuthService {
     final idToken = googleAuth.idToken;
     final accessToken = googleAuth.accessToken;
 
-    if (idToken == null || accessToken == null) {
+    if (idToken == null) {
       throw FirebaseAuthException(
         code: 'google-signin-failed',
         message: 'Google Sign-In gagal menghasilkan token autentikasi.',
@@ -68,11 +68,11 @@ class AuthService {
     );
     final result = await _auth.signInWithCredential(credential);
     final user = result.user;
-    if (user != null) await _ensureUserDocument(user);
+    if (user != null) await ensureUserDocument(user);
     return result;
   }
 
-  Future<void> _ensureUserDocument(User user) async {
+  Future<void> ensureUserDocument(User user) async {
     final ref = _db.collection(Col.users).doc(user.uid);
     final snapshot = await ref.get();
     if (snapshot.exists) return;

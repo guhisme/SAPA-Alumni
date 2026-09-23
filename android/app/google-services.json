@@ -51,11 +51,11 @@
       },
       "oauth_client": [
         {
-          "client_id": "725664611084-a4pnq0m01dmdqqjogo4oude8lsi8ahmi.apps.googleusercontent.com",
+          "client_id": "725664611084-m56rets680jncni8aimhp16dukisraik.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.sapa.app",
-            "certificate_hash": "272e47efca4523a65538ffc517351ee6ecacde76"
+            "certificate_hash": "ca6059b012fe9b9ce918722365d52ed37439201a"
           }
         },
         {

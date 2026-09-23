@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 import '../../models/alumni_profile.dart';
 import '../../models/user_model.dart';
@@ -25,7 +26,7 @@ class _CompleteProfileScreenState extends State<CompleteProfileScreen> {
   late final TextEditingController _phoneC =
       TextEditingController(text: widget.user.phone);
   final _yearC = TextEditingController();
-  final _majorC = TextEditingController();
+  String? _selectedMajor;
   final _skillC = TextEditingController();
 
   final List<String> _skills = [];
@@ -36,7 +37,6 @@ class _CompleteProfileScreenState extends State<CompleteProfileScreen> {
     _nameC.dispose();
     _phoneC.dispose();
     _yearC.dispose();
-    _majorC.dispose();
     _skillC.dispose();
     super.dispose();
   }
@@ -73,7 +73,7 @@ class _CompleteProfileScreenState extends State<CompleteProfileScreen> {
         AlumniProfile(
           uid: uid,
           graduationYear: int.tryParse(_yearC.text.trim()),
-          major: _majorC.text.trim(),
+          major: _selectedMajor ?? '',
           skills: _skills,
         ),
       );
@@ -133,7 +133,8 @@ class _CompleteProfileScreenState extends State<CompleteProfileScreen> {
                 TextFormField(
                   controller: _phoneC,
                   keyboardType: TextInputType.phone,
-                  maxLength: 15,
+                  maxLength: 13,
+                  inputFormatters: [FilteringTextInputFormatter.digitsOnly],
                   decoration: const InputDecoration(
                     labelText: 'Nomor WhatsApp',
                     hintText: '08xxxxxxxxxx',
@@ -144,25 +145,39 @@ class _CompleteProfileScreenState extends State<CompleteProfileScreen> {
                 const SizedBox(height: 10),
                 TextFormField(
                   controller: _yearC,
-                  keyboardType: TextInputType.number,
-                  maxLength: 4,
+                  readOnly: true,
                   decoration: const InputDecoration(
                     labelText: 'Tahun lulus',
-                    hintText: '2023',
+                    hintText: 'Pilih tahun',
                     prefixIcon: Icon(Icons.calendar_today_outlined),
                   ),
+                  onTap: () async {
+                    final now = DateTime.now().year;
+                    final picked = await showDatePicker(
+                      context: context,
+                      initialDate: DateTime(int.tryParse(_yearC.text) ?? now),
+                      firstDate: DateTime(1980),
+                      lastDate: DateTime(now + 1, 12, 31),
+                      helpText: 'Pilih tahun lulus',
+                    );
+                    if (picked != null) _yearC.text = picked.year.toString();
+                  },
                   validator: Validators.graduationYear,
                 ),
                 const SizedBox(height: 10),
-                TextFormField(
-                  controller: _majorC,
-                  textCapitalization: TextCapitalization.words,
-                  maxLength: 50,
+                DropdownButtonFormField<String>(
+                  initialValue: _selectedMajor,
                   decoration: const InputDecoration(
                     labelText: 'Jurusan',
-                    hintText: 'Rekayasa Perangkat Lunak',
                     prefixIcon: Icon(Icons.menu_book_outlined),
                   ),
+                  items: const ['RPL', 'MP', 'DKV', 'TKJ', 'TJA', 'Animasi']
+                      .map((major) => DropdownMenuItem(
+                            value: major,
+                            child: Text(major),
+                          ))
+                      .toList(),
+                  onChanged: (value) => setState(() => _selectedMajor = value),
                   validator: (v) => Validators.required(v, field: 'Jurusan'),
                 ),
                 const SizedBox(height: 18),

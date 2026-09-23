@@ -23,6 +23,43 @@ class MarketplaceProduct {
     required this.placeholderColorHex,
   });
 
+  factory MarketplaceProduct.fromMap(String id, Map<String, dynamic> map) =>
+      MarketplaceProduct(
+        id: id,
+        name: map['name'] as String? ?? '',
+        categoryCode: map['categoryCode'] as String? ?? '',
+        department: map['department'] as String? ?? '',
+        description: map['description'] as String? ?? '',
+        price: map['price'] as String? ?? 'Hubungi admin',
+        productImageAsset: map['productImageAsset'] as String? ?? '',
+        promoBannerAsset: map['promoBannerAsset'] as String? ?? '',
+        placeholderColorHex: map['placeholderColorHex'] as String? ?? '1565C0',
+      );
+
+  Map<String, dynamic> toMap() => {
+        'name': name,
+        'categoryCode': categoryCode,
+        'department': department,
+        'description': description,
+        'price': price,
+        'productImageAsset': productImageAsset,
+        'promoBannerAsset': promoBannerAsset,
+        'placeholderColorHex': placeholderColorHex,
+      };
+
+  MarketplaceProduct copyWith({String? name, String? price}) =>
+      MarketplaceProduct(
+        id: id,
+        name: name ?? this.name,
+        categoryCode: categoryCode,
+        department: department,
+        description: description,
+        price: price ?? this.price,
+        productImageAsset: productImageAsset,
+        promoBannerAsset: promoBannerAsset,
+        placeholderColorHex: placeholderColorHex,
+      );
+
   static const products = [
     MarketplaceProduct(
       id: 'rpl',

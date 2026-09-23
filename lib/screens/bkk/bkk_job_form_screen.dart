@@ -220,7 +220,7 @@ class _BkkJobFormScreenState extends State<BkkJobFormScreen> {
                 ),
                 const SizedBox(height: 14),
                 DropdownButtonFormField<String>(
-                  value: _status,
+                  initialValue: _status,
                   decoration: const InputDecoration(
                     labelText: 'Status lowongan',
                     prefixIcon: Icon(Icons.toggle_on_outlined),

@@ -11,6 +11,7 @@ class Col {
   static const banners = 'banners';
   static const bookmarks = 'bookmarks';
   static const notifications = 'notifications';
+  static const marketplaceProducts = 'marketplace_products';
 }
 
 class Roles {

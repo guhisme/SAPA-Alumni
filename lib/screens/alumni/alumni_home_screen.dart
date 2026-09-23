@@ -192,10 +192,14 @@ class _BannerCarouselState extends State<_BannerCarousel> {
     final banners = <_HomeBanner>[
       _HomeBanner(
         title: 'Global Korea Scholarship (GKS)',
-        provider: 'National Institute for International Education (NIIED), Republic of Korea',
-        description: 'Program beasiswa pemerintah Korea Selatan untuk mahasiswa internasional yang ingin melanjutkan pendidikan tinggi di Korea Selatan. GKS tersedia untuk beberapa jenjang pendidikan melalui jalur pendaftaran yang ditentukan setiap tahun.',
-        requirements: 'Memenuhi persyaratan kewarganegaraan, usia, akademik, kesehatan, dan dokumen sesuai panduan GKS tahun berjalan. Persyaratan dapat berbeda berdasarkan jenjang dan jalur pendaftaran.',
-        benefits: 'Mendapatkan dukungan biaya pendidikan dan berbagai tunjangan sesuai ketentuan GKS, termasuk biaya perjalanan, biaya pendidikan, tunjangan bulanan, dan dukungan lainnya selama masa studi.',
+        provider:
+            'National Institute for International Education (NIIED), Republic of Korea',
+        description:
+            'Program beasiswa pemerintah Korea Selatan untuk mahasiswa internasional yang ingin melanjutkan pendidikan tinggi di Korea Selatan. GKS tersedia untuk beberapa jenjang pendidikan melalui jalur pendaftaran yang ditentukan setiap tahun.',
+        requirements:
+            'Memenuhi persyaratan kewarganegaraan, usia, akademik, kesehatan, dan dokumen sesuai panduan GKS tahun berjalan. Persyaratan dapat berbeda berdasarkan jenjang dan jalur pendaftaran.',
+        benefits:
+            'Mendapatkan dukungan biaya pendidikan dan berbagai tunjangan sesuai ketentuan GKS, termasuk biaya perjalanan, biaya pendidikan, tunjangan bulanan, dan dukungan lainnya selama masa studi.',
         assetPath: 'assets/images/scholarship.jpg',
         color: AppColors.primary,
         onTap: () => Navigator.push(
@@ -203,10 +207,14 @@ class _BannerCarouselState extends State<_BannerCarousel> {
           MaterialPageRoute(
             builder: (_) => const AlumniBannerInfoScreen(
               title: 'Global Korea Scholarship (GKS)',
-              provider: 'National Institute for International Education (NIIED), Republic of Korea',
-              description: 'Program beasiswa pemerintah Korea Selatan untuk mahasiswa internasional yang ingin melanjutkan pendidikan tinggi di Korea Selatan. GKS tersedia untuk beberapa jenjang pendidikan melalui jalur pendaftaran yang ditentukan setiap tahun.',
-              requirements: 'Memenuhi persyaratan kewarganegaraan, usia, akademik, kesehatan, dan dokumen sesuai panduan GKS tahun berjalan. Persyaratan dapat berbeda berdasarkan jenjang dan jalur pendaftaran.',
-              benefits: 'Mendapatkan dukungan biaya pendidikan dan berbagai tunjangan sesuai ketentuan GKS, termasuk biaya perjalanan, biaya pendidikan, tunjangan bulanan, dan dukungan lainnya selama masa studi.',
+              provider:
+                  'National Institute for International Education (NIIED), Republic of Korea',
+              description:
+                  'Program beasiswa pemerintah Korea Selatan untuk mahasiswa internasional yang ingin melanjutkan pendidikan tinggi di Korea Selatan. GKS tersedia untuk beberapa jenjang pendidikan melalui jalur pendaftaran yang ditentukan setiap tahun.',
+              requirements:
+                  'Memenuhi persyaratan kewarganegaraan, usia, akademik, kesehatan, dan dokumen sesuai panduan GKS tahun berjalan. Persyaratan dapat berbeda berdasarkan jenjang dan jalur pendaftaran.',
+              benefits:
+                  'Mendapatkan dukungan biaya pendidikan dan berbagai tunjangan sesuai ketentuan GKS, termasuk biaya perjalanan, biaya pendidikan, tunjangan bulanan, dan dukungan lainnya selama masa studi.',
               assetPath: 'assets/images/scholarship.jpg',
               link: 'https://www.kecid.org/news/announcement_detail/81',
             ),
@@ -216,7 +224,8 @@ class _BannerCarouselState extends State<_BannerCarousel> {
       _HomeBanner(
         title: 'Google Internship',
         provider: 'Google',
-        description: 'Program magang yang memberikan kesempatan kepada mahasiswa dan calon profesional untuk memperoleh pengalaman kerja langsung di lingkungan Google. Peserta dapat terlibat dalam proyek nyata, bekerja bersama tim profesional, serta mengembangkan keterampilan teknis dan profesional sesuai bidang yang dipilih.',
+        description:
+            'Program magang yang memberikan kesempatan kepada mahasiswa dan calon profesional untuk memperoleh pengalaman kerja langsung di lingkungan Google. Peserta dapat terlibat dalam proyek nyata, bekerja bersama tim profesional, serta mengembangkan keterampilan teknis dan profesional sesuai bidang yang dipilih.',
         assetPath: 'assets/images/job.jpg',
         color: AppColors.primaryDark,
         onTap: () => Navigator.push(
@@ -225,7 +234,8 @@ class _BannerCarouselState extends State<_BannerCarousel> {
             builder: (_) => const AlumniBannerInfoScreen(
               title: 'Google Internship',
               provider: 'Google',
-              description: 'Program magang yang memberikan kesempatan kepada mahasiswa dan calon profesional untuk memperoleh pengalaman kerja langsung di lingkungan Google. Peserta dapat terlibat dalam proyek nyata, bekerja bersama tim profesional, serta mengembangkan keterampilan teknis dan profesional sesuai bidang yang dipilih.',
+              description:
+                  'Program magang yang memberikan kesempatan kepada mahasiswa dan calon profesional untuk memperoleh pengalaman kerja langsung di lingkungan Google. Peserta dapat terlibat dalam proyek nyata, bekerja bersama tim profesional, serta mengembangkan keterampilan teknis dan profesional sesuai bidang yang dipilih.',
               assetPath: 'assets/images/job.jpg',
             ),
           ),
@@ -331,6 +341,14 @@ class _Header extends StatelessWidget {
         final name = snap.data?.name ?? '';
         return Row(
           children: [
+            Builder(
+              builder: (context) => IconButton(
+                tooltip: 'Menu',
+                icon: const Icon(Icons.menu_rounded),
+                onPressed: () => Scaffold.of(context).openDrawer(),
+              ),
+            ),
+            const SizedBox(width: 2),
             Container(
               height: 46,
               width: 46,
